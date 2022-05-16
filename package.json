@@ -1,0 +1,11 @@
+{
+  "name": "torrentclient",
+  "version": "1.0.0",
+  "description": "a cli bit torrent client software",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Suleiman Msumari",
+  "license": "ISC"
+}
