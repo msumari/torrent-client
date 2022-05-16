@@ -3,6 +3,7 @@
 const dgram = require("dgram");
 const Buffer = require("buffer").Buffer;
 const urlParse = require("url").parse;
+const crypto = require("crypto");
 
 module.exports.getPeers = (torrent, callback) => {
   const socket = dgram.createSocket("udp4");
@@ -35,9 +36,29 @@ const udpSend = (socket, message, rawUrl, callback = () => {}) => {
 
 const respType = (resp) => {};
 
-const buildConnReq = () => {};
+const buildConnReq = () => {
+  /* Creating a buffer of 16 bytes. */
+  const buf = Buffer.alloc(16);
 
-const parseConnResp = (resp) => {};
+  buf.writeUInt32BE(0x417, 0);
+  buf.writeUInt32BE(0x27101980, 4);
+
+  /* Writing a 32-bit unsigned integer to the buffer. */
+  buf.writeUInt32BE(0, 8);
+
+  /* Generating 4 random bytes and copying them into the buffer at index 12. */
+  crypto.randomBytes(4).copy(buf, 12);
+
+  return buf;
+};
+
+const parseConnResp = (resp) => {
+  return {
+    action: resp.readUInt32BE(0),
+    transactionId: resp.readUInt32BE(4),
+    connectionId: resp.slice(8),
+  };
+};
 
 const buildAnnounceReq = (connId) => {};
 
